@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useSpring } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useBubblePhysics } from "../hooks/useBubblePhysics";
 
 export default function TechBubbleItem(props: any) {
@@ -9,8 +9,9 @@ export default function TechBubbleItem(props: any) {
   
   const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [isClicked, setIsClicked] = useState(false); 
   
-  const showInfo = isHovered || isDragging;
+  const showInfo = isHovered || isDragging || isClicked;
 
   const { x, y, z, scale, baseSize, mounted, handleDragEnd } = useBubblePhysics({
     ...props,
@@ -19,6 +20,10 @@ export default function TechBubbleItem(props: any) {
 
   const springScale = useSpring(scale, { stiffness: 150, damping: 18 });
 
+  useEffect(() => {
+    if (isDragging && isClicked) setIsClicked(false);
+  }, [isDragging, isClicked]);
+
   if (!mounted) return null;
 
   return (
@@ -26,12 +31,15 @@ export default function TechBubbleItem(props: any) {
       drag
       dragMomentum={false}
       onDragStart={() => setIsDragging(true)}
-      onDragEnd={handleDragEnd(() => setIsDragging(false))}
+      onDragEnd={handleDragEnd(() => {
+        setIsDragging(false);
+      })}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onTapStart={() => setIsHovered(true)}
-      onTap={() => setIsHovered(false)}
-      onTapCancel={() => setIsHovered(false)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setIsClicked(false); 
+      }}
+      onTap={() => setIsClicked(!isClicked)} 
       style={{
         position: "absolute", x, y, z,
         scale: springScale,
@@ -40,8 +48,8 @@ export default function TechBubbleItem(props: any) {
         transformStyle: "preserve-3d",
         touchAction: "none",
         cursor: "pointer",
-        willChange: "transform", 
-        transform: "translateZ(0)" 
+        willChange: "transform",
+        transform: "translateZ(0)"
       }}
       className="flex items-center justify-center pointer-events-auto select-none"
     >
@@ -52,7 +60,6 @@ export default function TechBubbleItem(props: any) {
             ? "radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.05))"
             : "radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02))",
           border: showInfo ? "1px solid rgba(255, 255, 255, 0.4)" : "1px solid rgba(255, 255, 255, 0.15)",
-
           boxShadow: showInfo 
             ? `0 10px 30px -5px ${glowColor}` 
             : "0 4px 15px -5px rgba(0,0,0,0.3)"
@@ -61,7 +68,6 @@ export default function TechBubbleItem(props: any) {
         <IconLayer iconUrl={iconUrl} label={label} showInfo={showInfo} />
         <InfoLayer label={label} level={level} levelText={levelText} showInfo={showInfo} />
         
-        {/* Reflejo de la burbuja */}
         <div className="absolute top-[8%] left-[18%] w-[35%] h-[20%] bg-gradient-to-br from-white/30 to-transparent rounded-full blur-[1px] -rotate-[30deg] pointer-events-none" />
       </div>
     </motion.div>
@@ -71,11 +77,7 @@ export default function TechBubbleItem(props: any) {
 function IconLayer({ iconUrl, label, showInfo }: any) {
   return (
     <motion.div 
-      animate={{ 
-        opacity: showInfo ? 0 : 1, 
-        scale: showInfo ? 0.5 : 1,
-        y: showInfo ? -10 : 0,
-      }}
+      animate={{ opacity: showInfo ? 0 : 1, scale: showInfo ? 0.5 : 1, y: showInfo ? -10 : 0 }}
       transition={{ duration: 0.2 }}
       className="absolute w-[70%] h-[70%] flex items-center justify-center pointer-events-none z-10 p-2"
     >
@@ -86,27 +88,14 @@ function IconLayer({ iconUrl, label, showInfo }: any) {
 
 function InfoLayer({ label, level, levelText, showInfo }: any) {
   return (
-    <div 
-      className={`absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none p-3 transition-all duration-300 ${showInfo ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}
-    >
-      <span className="text-white text-[10px] font-black uppercase tracking-widest mb-1">
-        {label}
-      </span>
-      <div className="flex gap-0.5 mb-1.5">
+    <div className={`absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none p-3 transition-all duration-300 ${showInfo ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
+      <span className="text-white text-[9px] font-black uppercase tracking-widest mb-1 text-center leading-tight">{label}</span>
+      <div className="flex gap-0.5 mb-1">
         {[...Array(5)].map((_, i) => (
-          <span 
-            key={i} 
-            className="text-[12px]" 
-            style={{ 
-              color: i < level ? "#facc15" : "rgba(255,255,255,0.1)",
-              textShadow: i < level ? "0 0 8px rgba(250, 204, 21, 0.4)" : "none" 
-            }}
-          >
-            ✦
-          </span>
+          <span key={i} className="text-[10px]" style={{ color: i < level ? "#facc15" : "rgba(255,255,255,0.1)" }}>✦</span>
         ))}
       </div>
-      <span className="text-[7px] text-white font-bold bg-white/10 px-2 py-0.5 rounded-full border border-white/10 backdrop-blur-sm">
+      <span className="text-[7px] text-white font-bold bg-white/10 px-2 py-0.5 rounded-full border border-white/10">
         {levelText}
       </span>
     </div>

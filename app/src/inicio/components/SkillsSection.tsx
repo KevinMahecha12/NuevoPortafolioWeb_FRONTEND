@@ -95,11 +95,11 @@ export default function SkillsSection({ categories, skillsGrouped, profile, opac
               <div className="flex-grow">
                 <AnimatePresence mode="wait">
                   {!isMinimalist ? (
-                    <motion.div key="interactive" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
+                    <motion.div key="interactive" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.2 }}>
                       <TechExplorer categories={categories} skillsGrouped={skillsGrouped} />
                     </motion.div>
                   ) : (
-                    <motion.div key="minimalist" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.4 }}>
+                    <motion.div key="minimalist" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.2 }}>
                       <MinimalistTechView skillsGrouped={skillsGrouped} />
                     </motion.div>
                   )}
