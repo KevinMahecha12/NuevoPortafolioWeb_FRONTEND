@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useSpring } from "framer-motion";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useBubblePhysics } from "../hooks/useBubblePhysics";
 
 export default function TechBubbleItem(props: any) {
@@ -11,6 +11,8 @@ export default function TechBubbleItem(props: any) {
   const [isDragging, setIsDragging] = useState(false);
   const [isClicked, setIsClicked] = useState(false); 
   
+  const dragDetected = useRef(false);
+
   const showInfo = (isHovered || isClicked) && !isDragging;
 
   const { x, y, z, scale, baseSize, mounted, handleDragEnd } = useBubblePhysics({
@@ -20,10 +22,21 @@ export default function TechBubbleItem(props: any) {
 
   const springScale = useSpring(scale, { stiffness: 200, damping: 20 });
 
-  const startInteraction = useCallback(() => {
-    setIsClicked(false);
-    setIsHovered(false);
-  }, []);
+  const handlePointerDown = () => {
+    dragDetected.current = false;
+  };
+
+  const handleDragStart = () => {
+    setIsDragging(true);
+    setIsClicked(false); 
+    dragDetected.current = true; 
+  };
+
+  const onBubbleTap = () => {
+    if (!dragDetected.current) {
+      setIsClicked(!isClicked);
+    }
+  };
 
   if (!mounted) return null;
 
@@ -31,14 +44,14 @@ export default function TechBubbleItem(props: any) {
     <motion.div
       drag
       dragMomentum={false}
-      onPointerDown={startInteraction}
-      onDragStart={() => setIsDragging(true)}
+      onPointerDown={handlePointerDown}
+      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd(() => {
         setIsDragging(false);
       })}
       onMouseEnter={() => !isDragging && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onTap={() => setIsClicked(!isClicked)} 
+      onTap={onBubbleTap} 
       style={{
         position: "absolute", x, y, z,
         scale: springScale,
