@@ -29,7 +29,8 @@ export default function TechBubbleItem(props: any) {
       onDragEnd={handleDragEnd(() => setIsDragging(false))}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      whileTap={{ cursor: "grabbing" }}
+      onTapStart={() => setIsHovered(true)}
+      onTap={() => setIsHovered(false)}
       style={{
         position: "absolute", x, y, z,
         scale: springScale,
@@ -37,7 +38,8 @@ export default function TechBubbleItem(props: any) {
         zIndex: showInfo ? 1000 : 0,
         transformStyle: "preserve-3d",
         touchAction: "none",
-        cursor: "pointer"
+        cursor: "pointer",
+        willChange:  "transform"
       }}
       className="flex items-center justify-center pointer-events-auto select-none active:cursor-grabbing"
     >
@@ -47,7 +49,7 @@ export default function TechBubbleItem(props: any) {
           background: showInfo 
             ? "radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.08))"
             : "radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02))",
-          backdropFilter: showInfo ? "blur(16px)" : "blur(10px)",
+          backdropFilter: showInfo ? "blur(4px)" : "blur(2px)",
           border: showInfo ? "1.5px solid rgba(255, 255, 255, 0.5)" : "1px solid rgba(255, 255, 255, 0.2)",
           boxShadow: showInfo 
             ? `0 0 50px -5px ${glowColor}, inset 0 0 20px rgba(255,255,255,0.1)` 

@@ -25,10 +25,12 @@ export function useBubblePhysics({ containerW, containerH, speed = 1, showInfo, 
   }, [speed]);
 
   useAnimationFrame((_, delta) => {
+    
     if (!mounted || showInfo) return; 
 
     const { w, h, d } = bounds.current;
-    const dt = Math.min(delta, 32) * 0.1;
+
+    const dt = Math.min(delta, 16) * 0.1;
 
     const currentVelMag = Math.sqrt(velocity.current.x ** 2 + velocity.current.y ** 2);
     const targetVel = 0.08 * speed;
@@ -46,19 +48,17 @@ export function useBubblePhysics({ containerW, containerH, speed = 1, showInfo, 
     let ny = y.get() + velocity.current.y * dt;
     let nz = z.get() + velocity.current.z * dt;
 
-    if (Math.abs(nx) >= w) { velocity.current.x *= -1; velocity.current.y += (Math.random() - 0.5) * 0.05; nx = nx >= w ? w : -w; }
-    if (Math.abs(ny) >= h) { velocity.current.y *= -1; velocity.current.x += (Math.random() - 0.5) * 0.05; ny = ny >= h ? h : -h; }
+    if (Math.abs(nx) >= w) { velocity.current.x *= -1; nx = nx >= w ? w : -w; }
+    if (Math.abs(ny) >= h) { velocity.current.y *= -1; ny = ny >= h ? h : -h; }
     if (Math.abs(nz) >= d) { velocity.current.z *= -1; nz = nz >= d ? d : -d; }
 
     x.set(nx); y.set(ny); z.set(nz);
     
-    // Pulsación solo cuando NO hay hover/drag
     time.current += (delta * 0.001) * pulseSpeed;
     const oscillation = (minPulseScale + maxPulseScale) / 2 + Math.sin(time.current) * ((maxPulseScale - minPulseScale) / 2);
     scale.set(oscillation);
   });
 
-  // Forzamos la escala máxima cuando hay interacción
   useEffect(() => {
     if (showInfo) scale.set(maxHoverScale);
   }, [showInfo, maxHoverScale, scale]);
