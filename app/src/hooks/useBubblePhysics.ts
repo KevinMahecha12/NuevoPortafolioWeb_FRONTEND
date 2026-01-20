@@ -25,11 +25,9 @@ export function useBubblePhysics({ containerW, containerH, speed = 1, showInfo, 
   }, [speed]);
 
   useAnimationFrame((_, delta) => {
-    
     if (!mounted || showInfo) return; 
 
     const { w, h, d } = bounds.current;
-
     const dt = Math.min(delta, 16) * 0.1;
 
     const currentVelMag = Math.sqrt(velocity.current.x ** 2 + velocity.current.y ** 2);
@@ -60,7 +58,9 @@ export function useBubblePhysics({ containerW, containerH, speed = 1, showInfo, 
   });
 
   useEffect(() => {
-    if (showInfo) scale.set(maxHoverScale);
+    if (showInfo) {
+      scale.set(maxHoverScale);
+    }
   }, [showInfo, maxHoverScale, scale]);
 
   const handleDragEnd = (onEndCallback: () => void) => (_: any, info: any) => {
