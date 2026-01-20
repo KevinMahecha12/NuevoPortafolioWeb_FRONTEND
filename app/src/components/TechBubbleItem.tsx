@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useSpring } from "framer-motion";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useBubblePhysics } from "../hooks/useBubblePhysics";
 
 export default function TechBubbleItem(props: any) {
@@ -18,7 +18,12 @@ export default function TechBubbleItem(props: any) {
     showInfo
   });
 
-  const springScale = useSpring(scale, { stiffness: 150, damping: 18 });
+  const springScale = useSpring(scale, { stiffness: 200, damping: 20 });
+
+  const startInteraction = useCallback(() => {
+    setIsClicked(false);
+    setIsHovered(false);
+  }, []);
 
   if (!mounted) return null;
 
@@ -26,18 +31,13 @@ export default function TechBubbleItem(props: any) {
     <motion.div
       drag
       dragMomentum={false}
-      onDragStart={() => {
-        setIsDragging(true);
-        setIsClicked(false); 
-      }}
+      onPointerDown={startInteraction}
+      onDragStart={() => setIsDragging(true)}
       onDragEnd={handleDragEnd(() => {
         setIsDragging(false);
       })}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        setIsClicked(false); 
-      }}
+      onMouseEnter={() => !isDragging && setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       onTap={() => setIsClicked(!isClicked)} 
       style={{
         position: "absolute", x, y, z,
@@ -46,7 +46,7 @@ export default function TechBubbleItem(props: any) {
         zIndex: showInfo ? 1000 : 0,
         transformStyle: "preserve-3d",
         touchAction: "none",
-        cursor: "pointer",
+        cursor: isDragging ? "grabbing" : "pointer",
         willChange: "transform",
         transform: "translateZ(0)"
       }}
@@ -58,7 +58,7 @@ export default function TechBubbleItem(props: any) {
           background: showInfo 
             ? "radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.05))"
             : "radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02))",
-          border: showInfo ? "1px solid rgba(255, 255, 255, 0.4)" : "1px solid rgba(255, 255, 255, 0.15)",
+          border: showInfo ? "1.5px solid rgba(255, 255, 255, 0.5)" : "1px solid rgba(255, 255, 255, 0.15)",
           boxShadow: showInfo 
             ? `0 10px 30px -5px ${glowColor}` 
             : "0 4px 15px -5px rgba(0,0,0,0.3)"
@@ -76,7 +76,7 @@ export default function TechBubbleItem(props: any) {
 function IconLayer({ iconUrl, label, showInfo }: any) {
   return (
     <motion.div 
-      animate={{ opacity: showInfo ? 0 : 1, scale: showInfo ? 0.5 : 1, y: showInfo ? -10 : 0 }}
+      animate={{ opacity: showInfo ? 0 : 1, scale: showInfo ? 0.4 : 1, y: showInfo ? -10 : 0 }}
       transition={{ duration: 0.2 }}
       className="absolute w-[70%] h-[70%] flex items-center justify-center pointer-events-none z-10 p-2"
     >
