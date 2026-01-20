@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useSpring } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useBubblePhysics } from "../hooks/useBubblePhysics";
 
 export default function TechBubbleItem(props: any) {
@@ -11,7 +11,7 @@ export default function TechBubbleItem(props: any) {
   const [isDragging, setIsDragging] = useState(false);
   const [isClicked, setIsClicked] = useState(false); 
   
-  const showInfo = isHovered || isDragging || isClicked;
+  const showInfo = (isHovered || isClicked) && !isDragging;
 
   const { x, y, z, scale, baseSize, mounted, handleDragEnd } = useBubblePhysics({
     ...props,
@@ -20,17 +20,16 @@ export default function TechBubbleItem(props: any) {
 
   const springScale = useSpring(scale, { stiffness: 150, damping: 18 });
 
-  useEffect(() => {
-    if (isDragging && isClicked) setIsClicked(false);
-  }, [isDragging, isClicked]);
-
   if (!mounted) return null;
 
   return (
     <motion.div
       drag
       dragMomentum={false}
-      onDragStart={() => setIsDragging(true)}
+      onDragStart={() => {
+        setIsDragging(true);
+        setIsClicked(false); 
+      }}
       onDragEnd={handleDragEnd(() => {
         setIsDragging(false);
       })}
