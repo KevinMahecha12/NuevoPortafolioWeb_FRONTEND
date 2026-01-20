@@ -5,12 +5,21 @@ import { useState, useCallback, useRef } from "react";
 import { useBubblePhysics } from "../hooks/useBubblePhysics";
 
 export default function TechBubbleItem(props: any) {
-  const { label, iconUrl, level, levelText, glowColor = "rgba(168, 85, 247, 0.4)" } = props;
+  const { 
+    id, 
+    activeBubbleId, 
+    setActiveBubbleId, 
+    label, 
+    iconUrl, 
+    level, 
+    levelText, 
+    glowColor = "rgba(168, 85, 247, 0.4)" 
+  } = props;
   
   const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [isClicked, setIsClicked] = useState(false); 
   
+  const isClicked = activeBubbleId == id;
   const dragDetected = useRef(false);
 
   const showInfo = (isHovered || isClicked) && !isDragging;
@@ -22,19 +31,20 @@ export default function TechBubbleItem(props: any) {
 
   const springScale = useSpring(scale, { stiffness: 200, damping: 20 });
 
-  const handlePointerDown = () => {
+  const handlePointerDown = (e: React.PointerEvent) => {
+    e.stopPropagation();
     dragDetected.current = false;
   };
 
   const handleDragStart = () => {
     setIsDragging(true);
-    setIsClicked(false); 
+    setActiveBubbleId(null); 
     dragDetected.current = true; 
   };
 
-  const onBubbleTap = () => {
+  const onBubbleTap = (e: any) => {
     if (!dragDetected.current) {
-      setIsClicked(!isClicked);
+      setActiveBubbleId(isClicked ? null : id);
     }
   };
 

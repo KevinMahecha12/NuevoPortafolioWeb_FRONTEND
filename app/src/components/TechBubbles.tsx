@@ -7,6 +7,8 @@ import { skills } from "../types/techs";
 export default function TechBubbles({ techs }: { techs: skills[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ w: 0, h: 0 });
+  
+  const [activeBubbleId, setActiveBubbleId] = useState<string | number | null>(null);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -22,6 +24,9 @@ export default function TechBubbles({ techs }: { techs: skills[] }) {
     return techs.map((tech) => (
       <TechBubbleItem 
         key={tech.id} 
+        id={tech.id} 
+        activeBubbleId={activeBubbleId} 
+        setActiveBubbleId={setActiveBubbleId} 
         label={tech.name} 
         level={tech.level}
         levelText={tech.level_text}
@@ -32,11 +37,12 @@ export default function TechBubbles({ techs }: { techs: skills[] }) {
         maxHoverScale={1.8} 
       />
     ));
-  }, [techs, dimensions]);
+  }, [techs, dimensions, activeBubbleId]); 
 
   return (
     <div 
       ref={containerRef}
+      onClick={() => setActiveBubbleId(null)}
       className="relative w-full h-[450px] flex items-center justify-center overflow-hidden rounded-xl bg-black/10"
       style={{ perspective: "1000px", transformStyle: "preserve-3d", WebkitOverflowScrolling: "touch" }}
     >
