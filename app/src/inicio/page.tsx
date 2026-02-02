@@ -16,6 +16,8 @@ interface HomeClientProps {
 export default function HomeClient({ categories = [], skillsGrouped = [], profile }: HomeClientProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   
+  const {full_name} = profile;
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
@@ -30,7 +32,7 @@ export default function HomeClient({ categories = [], skillsGrouped = [], profil
 
   return (
     <main ref={containerRef} className="bg-black text-white overflow-x-hidden">
-      <HeroSection opacity={opacityHero} scale={scaleHero} />
+      <HeroSection opacity={opacityHero} scale={scaleHero} fullName={full_name} />
       
       <SkillsSection 
         categories={categories} 

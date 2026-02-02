@@ -7,9 +7,10 @@ import HeroTypewriter from "../../components/HeroTypewriter";
 interface HeroSectionProps {
   opacity: MotionValue<number>;
   scale: MotionValue<number>;
+  fullName: string;
 }
 
-export default function HeroSection({ opacity, scale }: HeroSectionProps) {
+export default function HeroSection({ opacity, scale, fullName }: HeroSectionProps) {
   return (
     <motion.section 
       style={{ opacity, scale }}
@@ -40,14 +41,16 @@ export default function HeroSection({ opacity, scale }: HeroSectionProps) {
           transition={{ duration: 0.8 }}
           className="mb-6"
         >
-          Kevin Giovanni Mahecha Cabuto
+         {fullName}
         </Typography>
 
-        <div className="h-16 flex justify-center items-center">
-          <Typography variant="subtitle" as="div">
-            <HeroTypewriter />
-          </Typography>
-        </div>
+        {/*   <div className="h-16 flex justify-center items-center">
+            <Typography variant="subtitle" as="div">
+              <HeroTypewriter />
+            </Typography>
+          </div> */
+        }
+
       </div>
 
       <motion.div 
