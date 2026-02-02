@@ -1,4 +1,3 @@
-import MainLoadingScreen from "./src/components/ui/MainLoadingScreen";
 import HomeClient from "./src/inicio/page";
 import { getCategories } from "./src/services/categoriesService";
 import { getProfileData } from "./src/services/profileService";
@@ -6,6 +5,8 @@ import { getSkills } from "./src/services/SkillsService";
 import { Category } from "./src/types/categories";
 import { Profile } from "./src/types/profile";
 import { SkillsGrouped } from "./src/types/techs";
+
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   let categoriesData: { data: Category[] } = { data: [] };
@@ -18,10 +19,10 @@ export default async function Home() {
       getSkills(),
       getProfileData()
     ]);
-    
+
     categoriesData = resCat || { data: [] };
     techData = resSkills || { data: [] };
-    
+
     if (resProfile?.data?.length > 0) {
       profile = resProfile.data[0];
     }
@@ -29,17 +30,10 @@ export default async function Home() {
     console.error("Error cargando datos:", error);
   }
 
-  const categories = categoriesData?.data || [];
-  const skills = techData?.data || [];
-
-  if (categories.length === 0 || !profile) {
-    return <MainLoadingScreen />;
-  }
-
   return (
-    <HomeClient 
-      categories={categories} 
-      skillsGrouped={skills} 
+    <HomeClient
+      categories={categoriesData.data ?? []}
+      skillsGrouped={techData.data ?? []}
       profile={profile}
     />
   );
