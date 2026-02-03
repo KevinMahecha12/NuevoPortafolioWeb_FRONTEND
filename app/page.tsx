@@ -9,8 +9,8 @@ import { SkillsGrouped } from "./src/types/techs";
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  let categoriesData: { data: Category[] } = { data: [] };
-  let techData: { data: SkillsGrouped[] } = { data: [] };
+  let categories: Category[] = [];
+  let techData: SkillsGrouped[] = [];
   let profile: Profile | null = null;
 
   try {
@@ -20,11 +20,11 @@ export default async function Home() {
       getProfileData()
     ]);
 
-    categoriesData = resCat || { data: [] };
-    techData = resSkills || { data: [] };
+    categories = resCat || [];
+    techData = resSkills?.data || [];
 
-    if (resProfile?.data?.length > 0) {
-      profile = resProfile.data[0];
+    if (resProfile && resProfile.length > 0) {
+      profile = resProfile[0];
     }
   } catch (error) {
     console.error("Error cargando datos:", error);
@@ -32,8 +32,8 @@ export default async function Home() {
 
   return (
     <HomeClient
-      categories={categoriesData.data ?? []}
-      skillsGrouped={techData.data ?? []}
+      categories={categories}
+      skillsGrouped={techData}
       profile={profile}
     />
   );
