@@ -20,8 +20,6 @@ export default function SkillsSection({ categories, skillsGrouped, profile, opac
   }, []);
 
   const isMobile = windowWidth < 1024;
-  // Calculamos un desplazamiento proporcional: en pantallas pequeñas desktop (1024px) 
-  // se moverá menos (-300) que en pantallas gigantes (-600).
   const dynamicXDist = Math.min(windowWidth * 0.4, 600);
 
   const { scrollYProgress } = useScroll({
@@ -52,10 +50,8 @@ export default function SkillsSection({ categories, skillsGrouped, profile, opac
   return (
     <section ref={targetRef} className="relative z-10 min-h-screen bg-black px-4 md:px-10 py-32 overflow-hidden">
       <motion.div style={{ opacity }} className="max-w-7xl mx-auto">
-        {/* Usamos un gap menor en pantallas medianas para que no empuje las cosas afuera... */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-16 items-start lg:items-stretch">
           
-          {/* PROFILE CARD */}
           <motion.div 
             style={{ 
               x: xProfile, 

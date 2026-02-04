@@ -25,7 +25,7 @@ export default function ProjectFilters({ categories, activeId, onSelect, totalPr
       ">
         <button
           onClick={() => onSelect("all")}
-          className={`flex-shrink-0 snap-center px-6 py-2 rounded-full border text-[10px] font-bold uppercase tracking-widest transition-all duration-500 ${
+          className={`flex-shrink-0 cursor-pointer snap-center px-6 py-2 rounded-full border text-[10px] font-bold uppercase tracking-widest transition-all duration-500 ${
             activeId === "all"
               ? "bg-white border-white text-black shadow-[0_0_20px_rgba(255,255,255,0.3)]"
               : "border-white/10 text-white/40 hover:border-purple-500/50 hover:text-purple-300"
@@ -49,7 +49,7 @@ export default function ProjectFilters({ categories, activeId, onSelect, totalPr
             >
               <button
                 onClick={() => onSelect(cat.id)}
-                className={`group flex items-center gap-2 px-5 py-2 rounded-full border transition-all duration-500 ${
+                className={`group cursor-pointer flex items-center gap-2 px-5 py-2 rounded-full border transition-all duration-500 ${
                   activeId === cat.id
                     ? "bg-purple-500/20 border-purple-500 text-purple-200 shadow-[0_0_20px_rgba(168,85,247,0.4)]"
                     : "border-white/5 text-white/40 hover:border-purple-500/40 hover:text-purple-300"

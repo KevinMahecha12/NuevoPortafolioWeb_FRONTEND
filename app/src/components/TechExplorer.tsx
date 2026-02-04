@@ -39,35 +39,52 @@ export default function TechExplorer({ categories, skillsGrouped }: Props) {
     }));
   }, [selectedTab, skillsGrouped]);
 
+  // Manejador para centrar el botón al hacer click
+  const handleTabClick = (id: number | string, e: React.MouseEvent) => {
+    if (dragMoved) return;
+    setSelectedTab(id);
+    (e.currentTarget as HTMLElement).scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest"
+    });
+  };
+
   return (
     <div className="w-full select-none">
-
       <nav 
-        className={`relative group/nav py-2 transition-colors ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+        className={`relative group/nav py-2 transition-colors ${isDragging ? "cursor-grabbing" : "cursor-grab"} touch-pan-x`}
         {...handlers}
       >
-        <ArrowButton 
-          direction="left" 
-          show={showArrows.left} 
-          onClick={() => scrollTo("left")} 
-        />
-        <ArrowButton 
-          direction="right" 
-          show={showArrows.right} 
-          onClick={() => scrollTo("right")} 
-        />
+        {/* Flechas: Ocultas en móvil para evitar interrupciones táctiles */}
+        <div className="hidden md:block">
+          <ArrowButton 
+            direction="left" 
+            show={showArrows.left} 
+            onClick={() => scrollTo("left")} 
+          />
+          <ArrowButton 
+            direction="right" 
+            show={showArrows.right} 
+            onClick={() => scrollTo("right")} 
+          />
+        </div>
 
         <div
           ref={scrollRef}
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          className="flex gap-4 overflow-x-auto scroll-smooth border-b border-white/10 [&::-webkit-scrollbar]:hidden"
+          className={`
+            flex gap-4 overflow-x-auto scroll-smooth border-b border-white/10 
+            [&::-webkit-scrollbar]:hidden
+            snap-x snap-mandatory overscroll-x-contain touch-pan-x
+          `}
         >
           {categories.map((cat) => (
             <TabButton
               key={cat.id}
               label={cat.name}
               isActive={selectedTab === cat.id}
-              onClick={() => !dragMoved && setSelectedTab(cat.id)}
+              onClick={(e) => handleTabClick(cat.id, e)}
             />
           ))}
         </div>
@@ -99,13 +116,13 @@ function ArrowButton({ direction, show, onClick }: { direction: "left" | "right"
   );
 }
 
-function TabButton({ label, isActive, onClick }: { label: string, isActive: boolean, onClick: () => void }) {
+function TabButton({ label, isActive, onClick }: { label: string, isActive: boolean, onClick: (e: React.MouseEvent) => void }) {
   return (
     <button
       onClick={onClick}
       className={`
         px-6 py-4 font-bold transition-all duration-300 whitespace-nowrap cursor-inherit
-        border-b-2 
+        border-b-2 snap-center flex-shrink-0
         ${isActive
           ? "text-purple-400 border-purple-500 bg-purple-500/5"
           : "text-white/30 hover:text-white border-transparent"

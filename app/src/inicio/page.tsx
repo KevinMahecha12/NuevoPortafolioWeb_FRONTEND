@@ -39,7 +39,8 @@ export default function HomeClient({
 
   const opacityHero = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
   const scaleHero = useTransform(scrollYProgress, [0, 0.15], [1, 0.9]);
-  const opacitySkills = useTransform(scrollYProgress, [0.05, 0.2, 0.45, 0.55], [0, 1, 1, 0]);
+  const opacitySkills = useTransform(scrollYProgress,[0.05, 0.2, 0.85, 0.95],[0, 1, 1, 0]);
+
   const opacityProjects = useTransform(scrollYProgress, [0.45, 0.6], [0, 1]);
 
   if (!profile || categories.length === 0) {
