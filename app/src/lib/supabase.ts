@@ -17,8 +17,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 
 export default supabase; 
 
-export const callPgFunction = async (functionName, params = {}) => {
+export const callPgFunction = async <T>(functionName: string, params?: any): Promise<T | null> => {
   const { data, error } = await supabase.rpc(functionName, params);
   if (error) throw error;
-  return data;
+  return data as T;
 };

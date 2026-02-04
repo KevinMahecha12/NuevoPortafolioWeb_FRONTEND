@@ -15,12 +15,14 @@ export default function MainLoadingScreen() {
   };
 
   return (
-    <div className="h-screen w-full flex flex-col items-center justify-center bg-black gap-8">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/60 backdrop-blur-xs gap-8"
+    >
       <div className="relative">
-        {/* Capa de Glow */}
         <div className="absolute inset-0 rounded-full bg-purple-600/20 blur-2xl animate-pulse" />
-        
-        {/* Spinner Principal */}
         <div className="relative w-24 h-24">
           <div className="absolute inset-0 rounded-full border-t-2 border-l-2 border-purple-500 animate-spin shadow-[0_0_20px_rgba(168,85,247,0.4)]" />
           <div className="absolute inset-3 rounded-full border-b-2 border-r-2 border-blue-500/30 animate-spin-reverse" />
@@ -45,9 +47,8 @@ export default function MainLoadingScreen() {
             ))}
           </div>
         </div>
-        
         <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
       </div>
-    </div>
+    </motion.div>
   );
 }

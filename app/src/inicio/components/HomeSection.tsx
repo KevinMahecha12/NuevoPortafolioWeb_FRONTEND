@@ -1,12 +1,11 @@
 "use client";
-import { motion, MotionValue } from "framer-motion";
+import { motion } from "framer-motion";
 import Typography from "../../components/ui/Typography";
 import GlowLines from "../../components/GlowLines";
-import HeroTypewriter from "../../components/HeroTypewriter";
 
 interface HeroSectionProps {
-  opacity: MotionValue<number>;
-  scale: MotionValue<number>;
+  opacity: any; 
+  scale: any;
   fullName: string;
 }
 

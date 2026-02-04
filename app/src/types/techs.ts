@@ -39,3 +39,9 @@ export interface TechBubbleProps {
 export interface BubblePhysicsProps extends TechBubbleProps {
   showInfo: boolean;
 }
+
+export interface RawSkill extends Omit<skills, 'level_text'> {}
+
+export interface RawSkillsGrouped extends Omit<SkillsGrouped, 'skills'> {
+  skills: RawSkill[];
+}

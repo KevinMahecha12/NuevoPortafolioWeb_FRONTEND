@@ -1,33 +1,36 @@
 "use client";
 
-import MainLoadingScreen from "../components/ui/MainLoadingScreen";
+import { useRef, useState, useEffect } from "react";
 import { useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import MainLoadingScreen from "../components/ui/MainLoadingScreen";
 import HeroSection from "./components/HomeSection";
 import SkillsSection from "./components/SkillsSection";
-import { Category } from "../types/categories";
-import { SkillsGrouped } from "../types/techs";
-import { Profile } from "../types/profile";
-
-interface HomeClientProps {
-  categories: Category[];
-  skillsGrouped: SkillsGrouped[];
-  profile: Profile | null;
-}
+import ProjectsSection from "./components/ProjectsSection";
+import Footer from "./components/Footer";
 
 export default function HomeClient({
   categories = [],
   skillsGrouped = [],
-  profile = null
-}: HomeClientProps) {
-
-  if (!profile || categories.length === 0) {
-    return <MainLoadingScreen />;
-  }
-
+  profile = null,
+  projects = [],
+  projectCategories = []
+}: any) {
+  const [isNavigating, setIsNavigating] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
 
-  const { full_name } = profile;
+  useEffect(() => {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'auto';
+    }
+    
+    setHasMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -36,18 +39,43 @@ export default function HomeClient({
 
   const opacityHero = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
   const scaleHero = useTransform(scrollYProgress, [0, 0.15], [1, 0.9]);
-  const opacitySkills = useTransform(scrollYProgress, [0.05, 0.2], [0, 1]);
+  const opacitySkills = useTransform(scrollYProgress, [0.05, 0.2, 0.45, 0.55], [0, 1, 1, 0]);
+  const opacityProjects = useTransform(scrollYProgress, [0.45, 0.6], [0, 1]);
+
+  if (!profile || categories.length === 0) {
+    return <MainLoadingScreen />;
+  }
 
   return (
-    <main ref={containerRef} className="bg-black text-white overflow-x-hidden">
-      <HeroSection opacity={opacityHero} scale={scaleHero} fullName={full_name} />
+    <>
+      {isNavigating && <MainLoadingScreen />}
+      
+      <main 
+        ref={containerRef} 
+        className={`bg-black text-white overflow-x-hidden ${!hasMounted ? 'min-h-[5000px] opacity-0' : 'min-h-screen opacity-100'}`}
+      >
+        <HeroSection 
+          opacity={isMobile ? 1 : opacityHero} 
+          scale={isMobile ? 1 : scaleHero} 
+          fullName={profile.full_name} 
+        />
 
-      <SkillsSection
-        categories={categories}
-        skillsGrouped={skillsGrouped}
-        profile={profile}
-        opacity={opacitySkills}
-      />
-    </main>
+        <SkillsSection
+          categories={categories}
+          skillsGrouped={skillsGrouped}
+          profile={profile}
+          opacity={isMobile ? 1 : opacitySkills}
+        />
+
+        <ProjectsSection 
+          projects={projects} 
+          projectCategories={projectCategories}
+          opacity={isMobile ? 1 : opacityProjects} 
+          onNavigate={() => setIsNavigating(true)}
+        />
+
+        <Footer profile={profile} />
+      </main>
+    </>
   );
 }

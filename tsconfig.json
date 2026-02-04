@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "app/src/services/categoriesService.js", "app/src/services/SkillsService.js", "app/src/services/profileService.js"  ],
+, "app/src/services/categoriesService.ts", "app/src/services/SkillsService.ts", "app/src/services/profileService.ts"  ],
   "exclude": ["node_modules"]
 }
