@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
@@ -19,11 +19,27 @@ export default function ProjectGallery({ images }: ProjectGalleryProps) {
     restDelta: 0.001
   });
 
+  const handleScroll = () => {
+    if (!containerRef.current) return;
+
+    const container = containerRef.current;
+    const scrollLeft = container.scrollLeft;
+    const itemWidth = container.offsetWidth * 0.8;
+    
+    const newIndex = Math.round(scrollLeft / (itemWidth + 24)); 
+    if (newIndex !== activeIndex && newIndex >= 0 && newIndex < images.length) {
+      setActiveIndex(newIndex);
+    }
+  };
+
   const scrollToIndex = (index: number) => {
     if (!containerRef.current) return;
-    const width = containerRef.current.offsetWidth;
-    containerRef.current.scrollTo({
-      left: (width * 0.8) * index,
+    const container = containerRef.current;
+    const itemWidth = container.offsetWidth * 0.8;
+    const gap = 24;
+
+    container.scrollTo({
+      left: index * (itemWidth + gap),
       behavior: "smooth",
     });
     setActiveIndex(index);
@@ -33,12 +49,9 @@ export default function ProjectGallery({ images }: ProjectGalleryProps) {
     <div className="group/gallery relative w-full space-y-6">
       <div
         ref={containerRef}
-        className="flex gap-6 overflow-x-hidden snap-x snap-mandatory scroll-smooth"
-        onScroll={(e) => {
-          const x = e.currentTarget.scrollLeft;
-          const index = Math.round(x / (e.currentTarget.offsetWidth * 0.8));
-          if (index !== activeIndex) setActiveIndex(index);
-        }}
+        onScroll={handleScroll}
+        className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar touch-pan-x"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {images.map((url, i) => (
           <motion.div
@@ -50,7 +63,7 @@ export default function ProjectGallery({ images }: ProjectGalleryProps) {
               transition: { duration: 0.4 }
             }}
             onClick={() => setSelectedImage(url)}
-            className="relative min-w-[85%] md:min-w-[80%] h-[350px] md:h-[550px] rounded-[2.5rem] overflow-hidden snap-center border border-white/10 bg-white/5 cursor-pointer"
+            className="relative min-w-[85%] md:min-w-[80%] h-[350px] md:h-[550px] rounded-[2.5rem] overflow-hidden snap-center border border-white/10 bg-white/5 cursor-pointer flex-shrink-0"
           >
             <Image
               src={url}
@@ -105,7 +118,6 @@ export default function ProjectGallery({ images }: ProjectGalleryProps) {
         </button>
       </div>
 
-      {/* Modal / Lightbox */}
       <AnimatePresence>
         {selectedImage && (
           <motion.div
@@ -113,7 +125,7 @@ export default function ProjectGallery({ images }: ProjectGalleryProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedImage(null)}
-            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 md:p-10 cursor-zoom-out"
+            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 md:p-10"
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
@@ -130,11 +142,7 @@ export default function ProjectGallery({ images }: ProjectGalleryProps) {
                 priority
               />
             </motion.div>
-            
-            <button 
-              className="absolute top-8 right-8 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center backdrop-blur-md transition-colors"
-              onClick={() => setSelectedImage(null)}
-            >
+            <button className="absolute top-8 right-8 w-12 h-12 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </button>
           </motion.div>

@@ -4,7 +4,7 @@ import { useRef, useState, useMemo, useEffect } from "react";
 import ProjectFilters from "./ProjectFilters";
 import { useRouter } from "next/navigation";
 import FilterEmptyState from "./FilterEmptyState";
-import ProjectCard from "./ProjectCard"; // Importamos el nuevo componente
+import ProjectCard from "./ProjectCard";
 import { ProjectCategory, ProjectDetails } from "@/app/src/types/projects";
 import Typography from "@/app/src/components/ui/Typography";
 
@@ -42,7 +42,7 @@ export default function ProjectsSection({ projects, projectCategories, opacity, 
   return (
     <motion.section
       ref={sectionRef}
-      style={{ opacity: isMobile ? 1 : opacity }}
+      style={{ opacity }}
       className={`relative z-10 min-h-screen bg-black px-4 md:px-10 py-32 ${isMobile ? '' : 'sticky top-0'}`}
     >
       <div className="max-w-7xl mx-auto">

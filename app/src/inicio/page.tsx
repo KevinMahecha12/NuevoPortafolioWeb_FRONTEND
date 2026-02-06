@@ -53,7 +53,8 @@ export default function HomeClient({
       
       <main 
         ref={containerRef} 
-        className={`bg-black text-white overflow-x-hidden ${!hasMounted ? 'min-h-[5000px] opacity-0' : 'min-h-screen opacity-100'}`}
+        className="bg-black text-white overflow-x-hidden min-h-screen"
+        style={{ opacity: hasMounted ? 1 : 0 }}
       >
         <HeroSection 
           opacity={isMobile ? 1 : opacityHero} 

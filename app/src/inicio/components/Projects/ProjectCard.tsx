@@ -18,9 +18,9 @@ export default function ProjectCard({ project, isMobile, onClick }: ProjectCardP
 
   return (
     <motion.div
-      initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 20 }}
+      initial={false} 
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: isMobile ? 0 : 0.4 }}
+      transition={{ duration: 0.4 }}
       className="h-full"
     >
       <GlassCard
