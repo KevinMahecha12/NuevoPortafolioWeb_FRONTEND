@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
@@ -21,12 +21,12 @@ export default function ProjectGallery({ images }: ProjectGalleryProps) {
 
   const handleScroll = () => {
     if (!containerRef.current) return;
-
     const container = containerRef.current;
     const scrollLeft = container.scrollLeft;
-    const itemWidth = container.offsetWidth * 0.8;
+    const itemWidth = container.firstElementChild ? (container.firstElementChild as HTMLElement).offsetWidth : container.offsetWidth * 0.8;
+    const gap = 24; 
     
-    const newIndex = Math.round(scrollLeft / (itemWidth + 24)); 
+    const newIndex = Math.round(scrollLeft / (itemWidth + gap)); 
     if (newIndex !== activeIndex && newIndex >= 0 && newIndex < images.length) {
       setActiveIndex(newIndex);
     }
@@ -35,7 +35,7 @@ export default function ProjectGallery({ images }: ProjectGalleryProps) {
   const scrollToIndex = (index: number) => {
     if (!containerRef.current) return;
     const container = containerRef.current;
-    const itemWidth = container.offsetWidth * 0.8;
+    const itemWidth = (container.firstElementChild as HTMLElement).offsetWidth;
     const gap = 24;
 
     container.scrollTo({
@@ -50,8 +50,12 @@ export default function ProjectGallery({ images }: ProjectGalleryProps) {
       <div
         ref={containerRef}
         onScroll={handleScroll}
-        className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar touch-pan-x"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        className="flex gap-6 overflow-x-scroll snap-x snap-mandatory scroll-smooth no-scrollbar touch-auto"
+        style={{ 
+          scrollbarWidth: 'none', 
+          msOverflowStyle: 'none',
+          WebkitOverflowScrolling: 'touch'
+        }}
       >
         {images.map((url, i) => (
           <motion.div
@@ -69,7 +73,7 @@ export default function ProjectGallery({ images }: ProjectGalleryProps) {
               src={url}
               alt={`Gallery view ${i}`}
               fill
-              className="object-contain p-4 md:p-8 select-none"
+              className="object-contain p-4 md:p-8 select-none pointer-events-none"
               sizes="(max-width: 768px) 90vw, 70vw"
               priority={i === 0}
             />
@@ -142,9 +146,6 @@ export default function ProjectGallery({ images }: ProjectGalleryProps) {
                 priority
               />
             </motion.div>
-            <button className="absolute top-8 right-8 w-12 h-12 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-            </button>
           </motion.div>
         )}
       </AnimatePresence>
