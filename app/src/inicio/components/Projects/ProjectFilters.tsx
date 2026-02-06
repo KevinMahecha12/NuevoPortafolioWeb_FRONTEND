@@ -1,7 +1,7 @@
 "use client";
-import Typography from "../../components/ui/Typography";
-import Tooltip from "../../components/ui/Tooltip";
-import { ProjectCategory } from "../../types/projects";
+import Typography from "../../../components/ui/Typography";
+import Tooltip from "../../../components/ui/Tooltip";
+import { ProjectCategory } from "../../../types/projects";
 
 interface ProjectFiltersProps {
   categories: ProjectCategory[];

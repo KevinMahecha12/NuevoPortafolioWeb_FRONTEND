@@ -27,6 +27,13 @@ export interface ProjectDetails {
       name: string;
     };
   }[];
+  companies_involved: Company[];
+}
+
+export interface Company {
+  id: number;
+  name: string;
+  logo_url: string;
 }
 
 export interface ProjectCategory {

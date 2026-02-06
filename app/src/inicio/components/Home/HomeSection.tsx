@@ -1,7 +1,7 @@
 "use client";
+import GlowLines from "@/app/src/components/GlowLines";
+import Typography from "@/app/src/components/ui/Typography";
 import { motion } from "framer-motion";
-import Typography from "../../components/ui/Typography";
-import GlowLines from "../../components/GlowLines";
 
 interface HeroSectionProps {
   opacity: any; 

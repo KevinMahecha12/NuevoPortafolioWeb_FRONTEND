@@ -2,13 +2,6 @@
 import { useState, ReactNode, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-interface TooltipProps {
-  children: ReactNode;
-  content: ReactNode;
-  className?: string;
-  position?: "top" | "bottom" | "left" | "right";
-}
-
 interface PositionConfig {
   top?: string;
   bottom?: string;
@@ -24,10 +17,17 @@ interface PositionConfig {
   originY?: number;
 }
 
+interface TooltipProps {
+  children: ReactNode;
+  content: ReactNode;
+  className?: string;
+  position?: "top" | "bottom" | "left" | "right";
+}
+
 export default function Tooltip({ 
   children, 
   content, 
-  className = "w-64", 
+  className = "w-auto", 
   position = "top" 
 }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
@@ -54,48 +54,44 @@ export default function Tooltip({
   return (
     <div 
       className="relative inline-block"
+      style={{ zIndex: isVisible ? 50 : 1 }} 
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => setIsVisible(false)}
     >
-      <div className="cursor-help">
-        {children}
-      </div>
+      <div className="cursor-help">{children}</div>
 
       <AnimatePresence>
         {isVisible && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: position === "top" ? 10 : -10 }}
+            initial={{ opacity: 0, scale: 0.95, y: position === "top" ? 10 : -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: position === "top" ? 10 : -10 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            exit={{ opacity: 0, scale: 0.95, y: position === "top" ? 10 : -10 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
             style={{ 
               position: "absolute",
-              bottom: pos.bottom,
-              top: pos.top,
-              left: pos.left,
+              bottom: pos.bottom, 
+              top: pos.top, 
+              left: pos.left, 
               right: pos.right,
-              translateX: pos.x,
+              translateX: pos.x, 
               translateY: pos.y,
-              zIndex: 9999,
+              zIndex: 99999,
               transformOrigin: `${pos.originX ?? 0.5} ${pos.originY ?? 0.5}`
             }}
-            className={`
-              ${pos.mt || ""} ${pos.mb || ""} ${pos.ml || ""} ${pos.mr || ""}
-              p-4 bg-[#0a0a0a]/95 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl
-              pointer-events-none hidden md:block ${className}
-            `}
+            className={`${pos.mt || ""} ${pos.mb || ""} ${pos.ml || ""} ${pos.mr || ""}
+              p-3 bg-[#0a0a0a]/95 border border-purple-500/40 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] 
+              backdrop-blur-xl pointer-events-none hidden md:block ${className}`}
           >
-            <div className="relative z-10">
+            <div className="relative z-10 min-w-max">
               {content}
             </div>
             
-            <div className={`
-              absolute w-2 h-2 bg-[#0a0a0a] border-white/10 rotate-45
-              ${position === "top" ? "-bottom-1 left-1/2 -translate-x-1/2 border-r border-b" : ""}
-              ${position === "bottom" ? "-top-1 left-1/2 -translate-x-1/2 border-l border-t" : ""}
-              ${position === "left" ? "-right-1 top-1/2 -translate-y-1/2 border-r border-t" : ""}
-              ${position === "right" ? "-left-1 top-1/2 -translate-y-1/2 border-l border-b" : ""}
-            `} />
+            <div className={`absolute w-2.5 h-2.5 bg-[#0a0a0a] border-purple-500/40 rotate-45
+              ${position === "top" ? "-bottom-[5px] left-1/2 -translate-x-1/2 border-r border-b" : ""}
+              ${position === "bottom" ? "-top-[5px] left-1/2 -translate-x-1/2 border-l border-t" : ""}
+              ${position === "left" ? "-right-[5px] top-1/2 -translate-y-1/2 border-r border-t" : ""}
+              ${position === "right" ? "-left-[5px] top-1/2 -translate-y-1/2 border-l border-b" : ""}`} 
+            />
           </motion.div>
         )}
       </AnimatePresence>

@@ -3,10 +3,10 @@
 import { useRef, useState, useEffect } from "react";
 import { useScroll, useTransform } from "framer-motion";
 import MainLoadingScreen from "../components/ui/MainLoadingScreen";
-import HeroSection from "./components/HomeSection";
-import SkillsSection from "./components/SkillsSection";
-import ProjectsSection from "./components/ProjectsSection";
+import ProjectsSection from "./components/Projects/ProjectsSection";
 import Footer from "./components/Footer";
+import HeroSection from "./components/Home/HomeSection";
+import SkillsSection from "./components/Profile/SkillsSection";
 
 export default function HomeClient({
   categories = [],

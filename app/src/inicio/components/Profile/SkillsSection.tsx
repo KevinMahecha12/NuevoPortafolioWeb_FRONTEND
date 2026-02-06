@@ -2,10 +2,10 @@
 import { motion, AnimatePresence, useTransform, useSpring, useScroll } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import ProfileCard from "./ProfileCard";
-import Typography from "../../components/ui/Typography";
-import CustomSwitch from "../../components/ui/CustomSwitch";
-import TechExplorer from "../../components/TechExplorer";
-import MinimalistTechView from "../../components/MinimalistTechView";
+import Typography from "@/app/src/components/ui/Typography";
+import CustomSwitch from "@/app/src/components/ui/CustomSwitch";
+import TechExplorer from "@/app/src/components/TechExplorer";
+import MinimalistTechView from "@/app/src/components/MinimalistTechView";
 
 export default function SkillsSection({ categories, skillsGrouped, profile, opacity }: any) {
   const [isMinimalist, setIsMinimalist] = useState(false);

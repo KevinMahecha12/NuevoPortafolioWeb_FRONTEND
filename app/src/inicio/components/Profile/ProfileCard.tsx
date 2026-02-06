@@ -2,8 +2,8 @@
 import { motion, MotionValue } from "framer-motion";
 import Image from "next/image";
 import { Mail, Sparkles, Quote } from "lucide-react";
-import { Profile } from "../../types/profile";
-import Typography from "../../components/ui/Typography";
+import { Profile } from "../../../types/profile";
+import Typography from "../../../components/ui/Typography";
 
 interface ProfileCardProps {
   profile: Profile;
