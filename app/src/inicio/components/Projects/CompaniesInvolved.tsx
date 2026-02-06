@@ -10,7 +10,7 @@ interface CompaniesInvolvedProps {
 
 export default function CompaniesInvolved({ project, project_category_id }: CompaniesInvolvedProps) {
 
-  const companyLabel = project_category_id === 1 ? "Colaboración" : "Empresa(s) Involucrada";
+  const companyLabel = project_category_id === 1 ? "Colaboración" : "Empresa(s) Involucrada(s)";
 
   if (!project.companies_involved || project.companies_involved.length === 0) {
     return <div className="h-[72px] mb-4 flex-shrink-0" />;
